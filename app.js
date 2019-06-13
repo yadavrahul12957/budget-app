@@ -136,7 +136,12 @@ var UIController = (function() {
         inputValue: '.add__value',
         inputBtn: '.add__btn',
         incomeContainer: '.income__list',
-        expenseContainer: '.expenses__list'
+        expenseContainer: '.expenses__list',
+        budgetLabel: '.budget__value',
+        incomeLabel: '.budget__income--value',
+        expensesLabel: '.budget__expenses--value',
+        percentageLabel: '.budget__expenses--percentage'
+
     };
 
     return {
@@ -182,9 +187,22 @@ var UIController = (function() {
             fieldsArr.forEach(function(current, index, array) {
 
                 current.value = "";
-                // current.description = "";
             });
             fieldsArr[0].focus();
+        },
+
+        displayBudget: function(obj) {
+            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+            document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+
+
+            if (obj.percentage > 0) {
+                document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
+            } else {
+                document.querySelector(DOMstrings.percentageLabel).textContent = '--';
+            }
+
         },
 
         getDOMstrings: function() {
@@ -239,11 +257,12 @@ var controller = (function(budgetCtrl, UICtrl) {
 
         // 3. Display the budget on UI.
 
-        console.log(budget);
+        UICtrl.displayBudget(budget);
     };
 
     var ctrlAddItem = function() {
         var input, newItem;
+
         // 1. Get the field input data
         input = UICtrl.getInput();
 
@@ -269,6 +288,12 @@ var controller = (function(budgetCtrl, UICtrl) {
 
         init: function() {
             console.log('App has started.');
+            UICtrl.displayBudget({
+                budget: 0,
+                totalInc: 0,
+                totalExp: 0,
+                percentage: -1
+            });
             setupEventListners();
         }
     }
